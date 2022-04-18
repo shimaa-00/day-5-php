@@ -1,18 +1,16 @@
 <?php
-
+session_start();
+include 'model/users.php';
+!isset($_SESSION['username']) ? header('index.php') : '';
 $userId = isset($_GET['id'])  ? intval($_GET['id']) : '' ;
 
-$userFile = file("users.txt");
+//Delete user
+$user = Users::getUser($userId);
 
-
-if( isset($userFile[$userId]) ) {
-
-    unset($userFile[$userId]);
-    file_put_contents('users.txt',implode("",$userFile));
-    header("location:users.php");
-
-} else {
-    header("location:users.php");
+if( $user->deleteUser()) {
+    $_SESSION['message'] = "user delete successfully";
+    header('location:users.php');
 }
+
 
 

@@ -1,17 +1,25 @@
 <?php
 
+include 'config.php';
+session_start();
+require_once 'model/users.php';
+require_once 'header.php';
 
-    include 'header.php';
-    //!isset($_SESSION['username'])  ? header('location:index.php') : '';
-   // Check if there error with query string or old data
-   $error   = isset($_GET['error']) ? json_decode( $_GET['error'] ) : '';
-   $oldData = isset($_GET['olddata']) ? json_decode( $_GET['olddata'] ) : "";
-   // Get skills array
-   $skills = isset( $oldData->skills ) ? $oldData->skills : '';
+//!isset($_SESSION['usernamre'])  ? header('location:index.php') : '';
+// Check if there error with query string or old data
+$error   = isset($_GET['error']) ? json_decode( $_GET['error'] ) : '';
+$oldData = isset($_GET['olddata']) ? json_decode( $_GET['olddata'] ) : "";
+
 
 ?>
 
 <div class="container-form">
+    <?php
+    if( isset($_SESSION['message'])  ) {
+        echo "<div class='alert alert-danger'>".$_SESSION['message']."</div>";
+        unset($_SESSION['message']);
+    }
+    ?>
     <h2 class="title">Add user</h2>
     <form method="post" action="validateuser.php" enctype="multipart/form-data">
         <div class="form-group">
@@ -44,41 +52,12 @@
         </div>
         <!-- End gender -->
 
-        <!-- Skills-->
-        <div class="form-group">
-            <label>Skills</label>
-            <div class="inline-checkbox">
-                <div>
-                    <input type="checkbox" name="skills[]" value="php" id="php"
-                        <?=  (!empty( $skills )&& in_array( 'php', $skills ) ) ? 'checked' : '' ?>/>
-                    <label for="php">PHP</label>
-                </div>
-                <div>
-                    <input type="checkbox" name="skills[]" value="c" id="c"
-                        <?=  (!empty( $skills )&& in_array( 'c', $skills ) ) ? 'checked' : '' ?> />
-                        <label for="c">c</label>
-                </div>
-            </div>
-            <div class="inline-checkbox">
-                <div>
-                    <input type="checkbox" name="skills[]" value="python" id="python"
-                        <?=  (!empty( $skills )&& in_array( 'python', $skills ) ) ? 'checked' : '' ?> />
-                    <label for="python">python</label>
-                </div>
-                <div>
-                    <input type="checkbox" name="skills[]" value="mysql" id="mysql"
-                        <?=  (!empty( $skills )&& in_array( 'mysql', $skills ) ) ? 'checked' : '' ?>  />
-                    <label for="mysql">MYSQL</label>
-                </div>
-            </div>
-            <span class="error"><?= isset($error->skills) ? $error->skills : '' ?></span>
-        </div>
-        <!-- end skills -->
+
 
         <div class="form-group">
             <label>Username</label>
             <input class="form-style" type="text" name="username" value = "<?= isset($oldData->username) ? $oldData->username : ''?>" />
-            <span class="error"><? echo isset( $error->username ) ? $error->username : '' ?></span>
+            <span class="error"><?= isset( $error->username ) ? $error->username : '' ?></span>
         </div>
         <div class="form-group">
             <label>Password</label>
@@ -96,4 +75,4 @@
         </div>
     </form>
 </div>
-<? include 'footer.php' ?>
+<?php include 'footer.php' ?>

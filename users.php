@@ -1,70 +1,78 @@
 <?php
-
-include 'header.php';
+require_once 'config.php';
+session_start();
+require_once 'model/users.php';
 // check if user not logged in
 !isset($_SESSION['username']) ? header('location:index.php') : '';
+require_once 'header.php';
 
-$fileContent = file("users.txt");
-// Check if file not empty
-echo "<div class='container-table'>";
-    echo "<table class='table'>";
+// Fetch users data from database
+$users = Users::getAlluser(true, $_SESSION['id']);
 
-    if( !empty($fileContent) ) {
-        //Loop through each line
-        ?>
-        <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Address</th>
-            <th>Gender</th>
-            <th>skills</th>
-            <th>Controll</th>
-
-        </tr>
+?>
+<div class='container-table'>
+    <?php
+    if (isset($_SESSION['message'])) {
+        echo "<div class='alert alert-success'>" . $_SESSION['message'] . "</div>";
+        unset($_SESSION['message']);
+    }
+    ?>
+    <table class='table'>
         <?php
-        foreach( $fileContent as $index => $line ) {
-            $column = explode(':',$line);
+        if (!empty($users)) {
+        ?>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Address</th>
+                <th>Gender</th>
+                <th>Controll</th>
+            </tr>
+            <?php
 
-            if( isset($column[1]) ) {
-
-
-                ?>
+            foreach ($users as $user) {
+            ?>
                 <tr>
-                    <td><?= $column[0] ?> </td>
-                    <td><?= $column[1] ?> </td>
-                    <td><?= $column[2] ?> </td>
-                    <td><?= $column[3] ?> </td>
-                    <td><?= str_replace(',',' ',$column[4])  ?> </td>
+                    <td><?= $user->firstname ?> </td>
+                    <td><?= $user->lastname  ?> </td>
+                    <td><?= $user->address   ?> </td>
+                    <td><?= $user->gender  ?> </td>
                     <td>
-                        <a class="btn btn-primary" href="./viewuser.php?id=<?= $index ?>"> View</a>
-                        <a class="btn btn-success" href="./edit.php?id=<?= $index ?>">Edit</a>
-                        <a class="btn btn-danger"  href="./delete.php?id=<?= $index ?>">Delete</a>
+                        <a class="btn btn-primary" href="./viewuser.php?id=<?= $user->id ?>"> View</a>
+                        <a class="btn btn-success" href="./edit.php?id=<?= $user->id ?>">Edit</a>
+                        <a class="btn btn-danger" href="./delete.php?id=<?= $user->id ?>">Delete</a>
                     </td>
 
                 </tr>
+            <?php
 
-                <?php
             }
+            ?>
+            <tr>
+                <td colspan="7"><a class="btn btn-primary ms-auto mt-4 d-block" style="width:120px;" href="adduser.php">Add user</a></td>
+            </tr>
+        <?php
+        } else {
+        ?>
+            <tr>
+                <td>
+                    <div class="alert alert-warning">Sorry no user found</div>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="7"><a class="btn btn-primary ms-auto mt-4 d-block" style="width:120px;" href="adduser.php">Add user</a></td>
+            </tr>
 
-
-
+        <?php
         }
+
         ?>
-        <tr>
-            <td colspan="7"><a class="btn btn-primary ms-auto mt-4 d-block" style="width:120px;" href="adduser.php">Add user</a></td>
-        </tr>
-        <?php
-    } else {
-        ?>
-        <tr>
-            <td colspan="2">Sorry no data to show</td>
-            <td>
-                <a href="./adduser.php" class="btn btn-primary">Add user</a>
-            </td>
-        </tr>
-        <?php
-    }
-    echo "</table>";
-echo "</div>";
+    </table>
+</div>
+
+
+<?php
+
+
 include 'footer.php';
 ?>

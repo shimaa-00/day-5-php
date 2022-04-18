@@ -1,14 +1,9 @@
-<?
-include 'config.php';
+<?php
 
 if(  isset($_SESSION['username']) ) {
-    $userId = isset( $_SESSION['id']  ) ? $_SESSION['id'] : '';
-
+    $userId = $_SESSION['id'];
     // Get user img
-    $usersData = @(file('users.txt')[$userId]);
-    $userImg = explode(':',$usersData);
-    $userImg = isset( $userImg[7]) ? $userImg[7] : '';
-    $imgPath = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'img' . DIRECTORY_SEPARATOR;
+    $user = Users::getUser( $userId);
 
 }
 ?>
@@ -21,7 +16,9 @@ if(  isset($_SESSION['username']) ) {
     <link rel="stylesheet" href="css/file.css"/>
 </head>
 <body>
-    <? if( isset($_SESSION['username'])){ ?>
+    <?php 
+    if( isset($_SESSION['username'])){ 
+    ?>
     <header>
         <nav class="navbar">
             <div class="container">
@@ -41,7 +38,7 @@ if(  isset($_SESSION['username']) ) {
                     </li>
                 </ul>
                 <a href="#" class="avatar">
-                    <img src="<?= !empty($userImg) ? "./img/$userImg" : "./img/unknown.jpg"?>" width="50"/>
+                    <img src="<?= !empty( $user->img) ? "./img/{$user->img}" : "./img/unknown.jpg"?>" width="50"/>
                 </a>
                 <button class="toggle" id="toggle-menu" data-nav="navbar-submenu">
                     <a class="username"><?= $_SESSION['username']?> </a>
@@ -56,4 +53,4 @@ if(  isset($_SESSION['username']) ) {
             </div>
         </nav>
     </header>
-<? } ?>
+<?php } ?>
