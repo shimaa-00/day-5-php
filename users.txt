@@ -1,5 +1,0 @@
-Mostafa:Shawky:ST.EissaAlaraby:male:php,c:mostafa:123456:clothes1.jpg
-ahmed:mohamed:aadsadasddad:male:php,c:ahmed:123456:about.jpg
-
-
-ahmed:mohamed:testtest:male:php:mohamed_ahmed:123456:about.jpg
